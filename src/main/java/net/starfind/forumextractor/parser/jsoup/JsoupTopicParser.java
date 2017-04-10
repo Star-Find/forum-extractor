@@ -13,10 +13,12 @@ import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import net.starfind.forumextractor.model.Post;
 import net.starfind.forumextractor.parser.TopicParser;
 
+@Component
 public class JsoupTopicParser implements TopicParser {
 	
 	private static Logger LOG = LoggerFactory.getLogger(JsoupTopicParser.class);

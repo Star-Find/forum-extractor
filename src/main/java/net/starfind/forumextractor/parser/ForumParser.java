@@ -8,6 +8,6 @@ import net.starfind.forumextractor.model.Topic;
 
 public interface ForumParser {
 	
-	public List<Topic> parseForumPage (InputStream is) throws IOException;
+	public ParsedForumPage parseForumPage (InputStream is) throws IOException;
 
 }

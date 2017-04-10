@@ -1,7 +1,8 @@
-package net.starfind.forumextractor.request.http;
+package net.starfind.forumextractor.http;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -37,7 +38,9 @@ public class HttpApplicationLauncher implements ApplicationRunner {
 		List<String> forumIds = args.getOptionValues("forum");
 		List<String> topicIds = args.getOptionValues("topic");
 		
-		if (forumIds != null && forumIds.isEmpty()) {
+		LOG.info("Starting application (args="+Arrays.toString(args.getSourceArgs()));
+		
+		if (forumIds != null && !forumIds.isEmpty()) {
 			LOG.info("Requesting forums: "+forumIds+" from "+config.getBaseUrl());
 			
 			for (String forumId : forumIds) {
@@ -47,13 +50,13 @@ public class HttpApplicationLauncher implements ApplicationRunner {
 				
 				requester.requestPage(url, is -> {
 					try {
-						forumParser.parseForumPage(is);
+						System.out.println(forumParser.parseForumPage(is));
 					} catch (IOException ex) {
 						LOG.error("Problem parsing forum "+url, ex);
 					}
 				});
 			}
-		} else if (topicIds != null && topicIds.isEmpty()) {
+		} else if (topicIds != null && !topicIds.isEmpty()) {
 			LOG.info("Requesting topics: "+topicIds+" from "+config.getBaseUrl());
 			
 			for (String topicId : topicIds) {

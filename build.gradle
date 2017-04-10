@@ -22,10 +22,13 @@ repositories {
 }
 
 dependencies {
+    compile 'org.springframework.boot:spring-boot-starter'
 	compile 'org.springframework.boot:spring-boot-starter-validation'
 	compile 'org.jsoup:jsoup:1.10.2'
 	
-	runtime 'org.slf4j:slf4j-simple:1.7.21';
-	
-    testCompile 'junit:junit:4.12'
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+}
+
+bootRun {
+    args "--forum=3988709"
 }
