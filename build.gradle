@@ -30,5 +30,5 @@ dependencies {
 }
 
 bootRun {
-    args "--forum=3988709"
+    args "--topic=10276283"
 }

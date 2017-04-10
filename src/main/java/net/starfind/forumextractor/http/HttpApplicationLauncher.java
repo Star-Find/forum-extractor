@@ -60,13 +60,13 @@ public class HttpApplicationLauncher implements ApplicationRunner {
 			LOG.info("Requesting topics: "+topicIds+" from "+config.getBaseUrl());
 			
 			for (String topicId : topicIds) {
-				String topicPath = config.getForumPath().replace("<id>", topicId);
+				String topicPath = config.getTopicPath().replace("<id>", topicId);
 				
 				URL url = new URL(config.getBaseUrl()+topicPath);
 				
 				requester.requestPage(url, is -> {
 					try {
-						topicParser.parseTopicPage(is);
+						System.out.println(topicParser.parseTopicPage(is));
 					} catch (IOException ex) {
 						LOG.error("Problem parsing topic "+url, ex);
 					}

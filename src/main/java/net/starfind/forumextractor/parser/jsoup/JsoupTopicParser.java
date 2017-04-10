@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -16,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import net.starfind.forumextractor.model.Post;
+import net.starfind.forumextractor.parser.ParsedTopicPage;
 import net.starfind.forumextractor.parser.TopicParser;
 
 @Component
@@ -29,9 +28,26 @@ public class JsoupTopicParser implements TopicParser {
 	private String baseUri;
 	
 	@Override
-	public List<Post> parseTopicPage(InputStream is) throws IOException {
+	public ParsedTopicPage parseTopicPage(InputStream is) throws IOException {
 		Document doc = Jsoup.parse(is, "UTF-8", baseUri);
-		List<Post> posts = new ArrayList<>();
+		ParsedTopicPage topicPage = new ParsedTopicPage();
+		String headerString = doc.select("#topic_viewer thead th").first().text();
+		
+		if (headerString.contains(";")) {
+			topicPage.setName(headerString.substring(0, headerString.indexOf(';')));
+			topicPage.setDescription(headerString.substring(headerString.indexOf(';')));
+		} else {
+			topicPage.setName(headerString);
+		}
+		
+		Element lastPage = doc.select("ul.cat-pages li > a").last();
+		
+		if (lastPage != null) {
+			int thisPageNum = Integer.parseInt(doc.select("ul.cat-pages li > span").first().text());
+			int pageCount = Integer.parseInt(lastPage.text());
+			topicPage.setPageNumber(thisPageNum);
+			topicPage.setPageCount(pageCount);
+		}
 		
 		int count = 0;
 		Element header = null;
@@ -39,13 +55,13 @@ public class JsoupTopicParser implements TopicParser {
 			if (count % 5 == 1 && row.cssSelector().startsWith("#post")) {
 				header = row;
 			} else if (count % 5 == 2 && header != null) {
-				posts.add(extractPost(header, row));
+				topicPage.getPosts().add(extractPost(header, row));
 				header = null;
 			}
 			count++;
 		}
-		LOG.info("Found "+posts.size()+" post(s)");
-		return posts;
+		LOG.debug("Found "+topicPage.getPosts().size()+" post(s)");
+		return topicPage;
 	}
 
 	private Post extractPost (Element headerRow, Element contentRow) {
