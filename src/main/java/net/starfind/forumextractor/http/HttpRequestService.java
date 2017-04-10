@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import net.starfind.forumextractor.request.RequestService;
+import net.starfind.forumextractor.service.RequestService;
 
 @Service
 public class HttpRequestService implements RequestService {
@@ -38,6 +38,25 @@ public class HttpRequestService implements RequestService {
 		} else {
 			throw new IOException("Failed to retrieve "+pageUrl+": code="+responseCode);
 		}
+	}
+
+	@Override
+	public void requestForumPage(String id, int page, Consumer<InputStream> onSuccess) throws IOException {
+		String forumPath = config.getForumPath().replace("<id>", id).replace("<page>", Integer.toString(page));
+		
+		URL url = new URL(config.getBaseUrl()+forumPath);
+		
+		requestPage(url, onSuccess);
+	}
+
+	@Override
+	public void requestTopicPage(String id, int page, Consumer<InputStream> onSuccess) throws IOException {
+		String topicPath = config.getTopicPath().replace("<id>", id).replace("<page>", Integer.toString(page));
+		
+		URL url = new URL(config.getBaseUrl()+topicPath);
+		
+		requestPage(url, onSuccess);
+		
 	}
 
 }

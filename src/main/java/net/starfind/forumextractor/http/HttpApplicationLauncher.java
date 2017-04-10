@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 import net.starfind.forumextractor.parser.ForumParser;
 import net.starfind.forumextractor.parser.TopicParser;
-import net.starfind.forumextractor.request.RequestService;
+import net.starfind.forumextractor.service.RequestService;
 
 @Component
 public class HttpApplicationLauncher implements ApplicationRunner {
