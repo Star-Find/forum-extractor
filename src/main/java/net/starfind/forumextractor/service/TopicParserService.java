@@ -29,7 +29,7 @@ public class TopicParserService {
 		CompletableFuture<Topic> future = new CompletableFuture<>();
 		requestService.requestTopicPage(topicId, 1, is -> {
 			try {
-				ParsedTopicPage page = topicParser.parseTopicPage(is);
+				ParsedTopicPage page = topicParser.parseTopicPage(is, true);
 				Topic topic = new Topic();
 				topic.setName(page.getName());
 				topic.setDescription(page.getDescription());
@@ -50,7 +50,7 @@ public class TopicParserService {
 		for (int pageNum=2;pageNum<=count;pageNum++) {
 			requestService.requestTopicPage(topicId, pageNum, is -> {
 				try {
-					ParsedTopicPage page = topicParser.parseTopicPage(is);
+					ParsedTopicPage page = topicParser.parseTopicPage(is, false);
 					topic.getPosts().addAll(page.getPosts());
 				} catch (IOException ex) {
 					LOG.error("Problem fetching page for topic "+topicId, ex);

@@ -28,7 +28,7 @@ public class JsoupTopicParser implements TopicParser {
 	private String baseUri;
 	
 	@Override
-	public ParsedTopicPage parseTopicPage(InputStream is) throws IOException {
+	public ParsedTopicPage parseTopicPage(InputStream is, boolean firstPage) throws IOException {
 		Document doc = Jsoup.parse(is, "UTF-8", baseUri);
 		ParsedTopicPage topicPage = new ParsedTopicPage();
 		String headerString = doc.select("#topic_viewer thead th").first().text();
@@ -51,8 +51,10 @@ public class JsoupTopicParser implements TopicParser {
 		
 		int count = 0;
 		Element header = null;
-		for (Element row : doc.select("#topic_viewer tbody tr")) {
-			if (count % 5 == 1 && row.cssSelector().startsWith("#post")) {
+		Element table = firstPage ? doc.select("#topic_viewer").first() : doc.select(".topic").get(1);
+		for (Element row : table.select("tbody tr")) {
+			if (row.attr("id").startsWith("post")) {
+				count = 1;
 				header = row;
 			} else if (count % 5 == 2 && header != null) {
 				topicPage.getPosts().add(extractPost(header, row));

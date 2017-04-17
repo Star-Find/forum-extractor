@@ -5,6 +5,6 @@ import java.io.InputStream;
 
 public interface TopicParser {
 	
-	public ParsedTopicPage parseTopicPage (InputStream is) throws IOException;
+	public ParsedTopicPage parseTopicPage (InputStream is, boolean firstPage) throws IOException;
 
 }

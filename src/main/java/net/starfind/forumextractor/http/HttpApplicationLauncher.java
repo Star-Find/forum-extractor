@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,9 +14,12 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+import net.starfind.forumextractor.model.Post;
+import net.starfind.forumextractor.model.Topic;
 import net.starfind.forumextractor.parser.ForumParser;
 import net.starfind.forumextractor.parser.TopicParser;
 import net.starfind.forumextractor.service.RequestService;
+import net.starfind.forumextractor.service.TopicParserService;
 
 @Component
 public class HttpApplicationLauncher implements ApplicationRunner {
@@ -25,7 +30,7 @@ public class HttpApplicationLauncher implements ApplicationRunner {
 	private ForumParser forumParser;
 	
 	@Autowired
-	private TopicParser topicParser;
+	private TopicParserService topicParser;
 	
 	@Autowired
 	private HttpConfiguration config;
@@ -60,17 +65,16 @@ public class HttpApplicationLauncher implements ApplicationRunner {
 			LOG.info("Requesting topics: "+topicIds+" from "+config.getBaseUrl());
 			
 			for (String topicId : topicIds) {
-				String topicPath = config.getTopicPath().replace("<id>", topicId);
-				
-				URL url = new URL(config.getBaseUrl()+topicPath);
-				
-				requester.requestTopicPage(topicId, 1, is -> {
-					try {
-						System.out.println(topicParser.parseTopicPage(is));
-					} catch (IOException ex) {
-						LOG.error("Problem parsing topic "+url, ex);
+				Future<Topic> future = topicParser.parseTopic(topicId);
+				try {
+					Topic topic = future.get(5000, TimeUnit.MILLISECONDS);
+					System.out.println(topic);
+					for (Post post : topic.getPosts()) {
+						System.out.println(post);
 					}
-				});
+				} catch (Exception ex) {
+					LOG.error("Problem parsing topic "+topicId, ex);
+				}
 			}
 		} else {
 			System.err.println("Requires either --forum=<id> or --topic=<id>");

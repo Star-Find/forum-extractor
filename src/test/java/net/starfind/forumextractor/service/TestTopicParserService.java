@@ -64,7 +64,7 @@ public class TestTopicParserService {
 				.ipAddress("").date(LocalDateTime.parse("2017-04-13T20:00:00")).build();
 		page.getPosts().add(expectedPost1);
 		
-		when(topicParser.parseTopicPage(any())).thenReturn(page);
+		when(topicParser.parseTopicPage(any(), anyBoolean())).thenReturn(page);
 		
 		Future<Topic> topicResult = topicParserService.parseTopic("1234567");
 		
@@ -109,7 +109,8 @@ public class TestTopicParserService {
 		page2.getPosts().add(expectedPost3);
 		page2.getPosts().add(expectedPost4);
 		
-		when(topicParser.parseTopicPage(any())).thenReturn(page1, page2);
+		when(topicParser.parseTopicPage(any(), eq(true))).thenReturn(page1);
+		when(topicParser.parseTopicPage(any(), eq(false))).thenReturn(page2);
 		
 		Future<Topic> topicResult = topicParserService.parseTopic("9876542");
 		
