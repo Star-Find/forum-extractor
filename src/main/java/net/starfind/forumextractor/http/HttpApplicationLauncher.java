@@ -48,7 +48,7 @@ public class HttpApplicationLauncher implements ApplicationRunner {
 				
 				URL url = new URL(config.getBaseUrl()+forumPath);
 				
-				requester.requestPage(url, is -> {
+				requester.requestForumPage(forumId, 1, is -> {
 					try {
 						System.out.println(forumParser.parseForumPage(is));
 					} catch (IOException ex) {
@@ -64,7 +64,7 @@ public class HttpApplicationLauncher implements ApplicationRunner {
 				
 				URL url = new URL(config.getBaseUrl()+topicPath);
 				
-				requester.requestPage(url, is -> {
+				requester.requestTopicPage(topicId, 1, is -> {
 					try {
 						System.out.println(topicParser.parseTopicPage(is));
 					} catch (IOException ex) {
