@@ -67,6 +67,7 @@ public class JsoupTopicParser implements TopicParser {
 	}
 
 	private Post extractPost (Element headerRow, Element contentRow) {
+		String id = headerRow.attr("id").replace("post-", "");
 		String author = headerRow.select(".c_username .member").text();
 		String ip = headerRow.select(".c_postinfo .right .desc").text();
 		if (ip.startsWith("IP: ")) {
@@ -77,6 +78,7 @@ public class JsoupTopicParser implements TopicParser {
 		String postContent = contentRow.select(".c_post").html();
 		
 		Post post = new Post();
+		post.setId(id);
 		post.setAuthor(author);
 		post.setIpAddress(ip);
 		post.setDate(date);

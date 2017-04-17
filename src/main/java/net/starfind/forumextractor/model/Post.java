@@ -46,6 +46,7 @@ public final class Post {
 		return new Builder();
 	}
 	
+	private String id;
 	
 	private String author;
 	
@@ -54,6 +55,14 @@ public final class Post {
 	private String content;
 	
 	private LocalDateTime date;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public String getAuthor() {
 		return author;
@@ -91,6 +100,7 @@ public final class Post {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((author == null) ? 0 : author.hashCode());
 		result = prime * result + ((content == null) ? 0 : content.hashCode());
 		result = prime * result + ((date == null) ? 0 : date.hashCode());
@@ -107,6 +117,11 @@ public final class Post {
 		if (getClass() != obj.getClass())
 			return false;
 		Post other = (Post) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
 		if (author == null) {
 			if (other.author != null)
 				return false;
@@ -132,6 +147,6 @@ public final class Post {
 
 	@Override
 	public String toString() {
-		return "Post [author=" + author + ", ipAddress=" + ipAddress + ", content=" + content + ", date=" + date + "]";
+		return "Post [id=" + id + ", author=" + author + ", ipAddress=" + ipAddress + ", content=" + content + ", date=" + date + "]";
 	}
 }

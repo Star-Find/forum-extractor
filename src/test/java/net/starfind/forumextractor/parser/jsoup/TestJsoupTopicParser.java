@@ -41,6 +41,7 @@ public class TestJsoupTopicParser {
 		assertEquals(1, parsedPage.getPosts().size());
 		
 		Post post = parsedPage.getPosts().get(0);
+		assertEquals("1234567", post.getId());
 		assertEquals("Test Account", post.getAuthor());
 		assertEquals("12.34.56.78", post.getIpAddress());
 		assertEquals(LocalDateTime.parse("2016-02-27T00:48:00"), post.getDate());
@@ -62,6 +63,7 @@ public class TestJsoupTopicParser {
 		assertEquals(4, parsedPage.getPosts().size());
 		
 		Post post = parsedPage.getPosts().get(0);
+		assertEquals("100002", post.getId());
 		assertEquals("Test", post.getAuthor());
 		assertEquals("43.32.133.44", post.getIpAddress());
 		assertEquals(LocalDateTime.parse("2017-01-30T10:21:00"), post.getDate());
