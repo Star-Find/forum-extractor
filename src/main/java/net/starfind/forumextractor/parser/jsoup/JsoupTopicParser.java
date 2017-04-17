@@ -74,7 +74,7 @@ public class JsoupTopicParser implements TopicParser {
 		}
 		String dateStr = headerRow.select(".c_postinfo .left").text();
 		LocalDateTime date = LocalDateTime.parse(dateStr, POST_DATE_FORMAT);
-		String postContent = contentRow.select(".c_post").text();
+		String postContent = contentRow.select(".c_post").html();
 		
 		Post post = new Post();
 		post.setAuthor(author);
